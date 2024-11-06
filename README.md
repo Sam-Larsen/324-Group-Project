@@ -5,7 +5,7 @@ supervisor asks your team to examine how a certain cost affects cooperation
 model/explore agent-agent interactions across network topologies
 (including potential cascading failures) and use your model to represent
 specific real-case examples.
-
+```
       ___          ___          ___          ___          ___          ___          ___                   ___          ___          ___                 ___          ___          ___ 
      /\  \        /\  \        /\  \        /\  \        /\  \        /\  \        /\  \                 /\  \        /\  \        /\  \         ___   /\  \        /\  \        /\__\
     /::\  \      /::\  \      /::\  \      /::\  \      /::\  \      /::\  \      /::\  \               /::\  \      /::\  \      /::\  \       /\  \  \:\  \      /::\  \      /:/  /
@@ -17,3 +17,4 @@ specific real-case examples.
    \:\  \          /:/  /    \:\/:/  /    \:\  \          /:/  /    \:\/:/  /    \:\ \/__/             \:\  \          /:/  /        \/__/   \:\__\  \/__/           /:/  /    \:\  \ 
     \:\__\        /:/  /      \::/  /      \:\__\        /:/  /      \::/__/      \:\__\                \:\__\        /:/  /                  \/__/                 /:/  /      \:\__\
      \/__/        \/__/        \/__/        \/__/        \/__/        ~~           \/__/                 \/__/        \/__/                                         \/__/        \/__/
+```
