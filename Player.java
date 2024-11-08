@@ -16,7 +16,7 @@ abstract class Player {
     }
 
     public int get_payoff() {
-        return payoff;
+        return this.payoff;
     }
 
     public void eliminate_or_not(int num_alive_neighbot) {
@@ -24,7 +24,15 @@ abstract class Player {
             this.alive = false;
     }
 
+    public void Restart(){
+        this.payoff=0;
+    }
+
     public abstract void calc_payoff(int num_alive_neighbor);
 
     public abstract Player switchType();
+
+    public abstract boolean Is_Cooperator();
+
+   
 }

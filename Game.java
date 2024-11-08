@@ -13,8 +13,21 @@ public class Game {
         }
 
         for (int player : this.graph.get_Players()) { // Hosting game
-            for (Player neighbor: this.graph.get_Neighbors(player)){// 
+            int num_Cooperator = 0;
+            int num_Defector = 0;
+            for (Player neighbor: this.graph.get_Neighbors(player)){
+                if (neighbor.Is_Cooperator()){
+                    num_Cooperator++;
+                }else{
+                    num_Defector++;
+                }
             }
+
+            for (Player neighbor: this.graph.get_Neighbors(player)){
+                
+            }
+
+
         }
 
             

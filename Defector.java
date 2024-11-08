@@ -5,11 +5,16 @@ class Defector extends Player {
     }
 
     @Override
-    public void calc_payoff(int num_alive_neighbor) {
+    public void calc_payoff(int num_alive_neighbor) { // need to do it accumulatively
     }
 
     @Override
     public Player switchType() {
         return new Cooperator(this.payoff, this.alpha, this.k, this.enhancement);  
+    }
+
+    @Override
+    public boolean Is_Cooperator() { 
+        return false;
     }
 }

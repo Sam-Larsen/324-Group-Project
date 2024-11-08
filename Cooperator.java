@@ -10,7 +10,7 @@ class Cooperator extends Player {
     }
 
     @Override
-    public Player switchType() {
-        return new Defector(this.payoff, this.alpha, this.k, this.enhancement);  
+    public boolean Is_Cooperator() { 
+        return true;
     }
 }
