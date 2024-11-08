@@ -1,3 +1,4 @@
+
 abstract class Player {
     protected int payoff;
     protected boolean alive;

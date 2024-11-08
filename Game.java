@@ -5,7 +5,21 @@ public class Game {
     public Game(int rows, int cols, int rounds) {
         this.graph = new Graph(rows, cols);  
     }
+
     public void runGame() {
+
+        for (int player : this.graph.get_Players()) {
+            this.graph.get_Player(player).switchType();
+        }
+
+        for (int player : this.graph.get_Players()) { // Hosting game
+            for (Player neighbor: this.graph.get_Neighbors(player)){// 
+            }
+        }
+
+            
+            
+
         //If the current game is not the first one
             // for each player
                 // for each neighbor
