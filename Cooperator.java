@@ -5,7 +5,7 @@ class Cooperator extends Player {
     }
 
     @Override
-    public void calc_payoff(int num_alive_neighbor) {
+    public void calc_payoff(int Cooperator, int Defector) {
 
     }
 

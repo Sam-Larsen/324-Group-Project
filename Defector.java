@@ -5,7 +5,7 @@ class Defector extends Player {
     }
 
     @Override
-    public void calc_payoff(int num_alive_neighbor) { // need to do it accumulatively
+    public void calc_payoff(int Cooperator, int Defector) { // need to do it accumulatively
     }
 
     @Override
