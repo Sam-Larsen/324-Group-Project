@@ -19,6 +19,10 @@ abstract class Player {
         return this.payoff;
     }
 
+    public boolean isAlive() {
+        return this.alive;
+    }
+
     public void eliminate_or_not(int num_alive_neighbor) {
         if (this.payoff < this.alpha * (1-this.enhancement)*(1+num_alive_neighbor))
             this.alive = false;
@@ -27,7 +31,7 @@ abstract class Player {
     public void Restart(){
         this.payoff=0;
     }
-
+    
     public abstract void calc_payoff(int Cooperator, int Defector);
 
     public abstract Player switchType();
