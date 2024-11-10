@@ -8,7 +8,7 @@ class Cooperator extends Player {
     public void calc_payoff(int Cooperator, int Defector) {
         // Calculate payoff for Cooperator
         int basePayoff = (int) (this.enhancement * Cooperator / (Cooperator + Defector + 1));
-        this.payoff += basePayoff - 1;  // Cost of cooperation (set to 1 as per convention)
+        this.payoff += basePayoff - 1;
     }
 
     @Override

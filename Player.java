@@ -1,3 +1,5 @@
+import java.util.List;
+import java.util.Random;
 
 abstract class Player {
     protected int payoff;
@@ -31,12 +33,33 @@ abstract class Player {
     public void Restart(){
         this.payoff=0;
     }
-    
+
     public abstract void calc_payoff(int Cooperator, int Defector);
 
     public abstract Player switchType();
 
     public abstract boolean Is_Cooperator();
 
-   
+    public void switch_or_not(List<Player> neighbors) {
+        Random rand = new Random();
+
+        for (Player neighbor : neighbors) {
+            if (neighbor.isAlive() && neighbor.get_payoff() > this.payoff) {
+                double probability = 1 / (1 + Math.exp((this.payoff - neighbor.get_payoff()) / this.k));
+
+                if (rand.nextDouble() < probability) {
+                    Player newType;
+
+                    if (neighbor.Is_Cooperator()) {
+                        newType = new Cooperator(this.payoff, this.alpha, this.k, this.enhancement);
+                    } else {
+                        newType = new Defector(this.payoff, this.alpha, this.k, this.enhancement);
+                    }
+                    this.payoff = newType.get_payoff();
+                    this.alive = newType.isAlive();
+                    break; // Only switch once per round
+                }
+            }
+        }
+    }
 }
