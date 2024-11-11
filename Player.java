@@ -2,14 +2,14 @@ import java.util.List;
 import java.util.Random;
 
 abstract class Player {
-    protected int payoff;
+    protected double payoff;
     protected boolean alive;
     protected double alpha;
     protected double k;
     protected double enhancement;
     // other field of parameter *enahncement....
 
-    public Player(int energy, double alpha, double k, double enhancement) {
+    public Player(double energy, double alpha, double k, double enhancement) {
         this.payoff = energy;
         this.alpha= alpha;
         this.k = k;
@@ -17,7 +17,7 @@ abstract class Player {
         this.alive = true;
     }
 
-    public int get_payoff() {
+    public double get_payoff() {
         return this.payoff;
     }
 
@@ -36,7 +36,7 @@ abstract class Player {
 
     public abstract void calc_payoff(int Cooperator, int Defector);
 
-    public abstract Player switchType();
+    public abstract Player switchType(double Payoff);
 
     public abstract boolean Is_Cooperator();
 

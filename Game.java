@@ -1,3 +1,6 @@
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private Graph graph;
@@ -7,12 +10,35 @@ public class Game {
     }
 
     public void runGame() {
-
+        // Check for the player's switch strategy
         for (int player : this.graph.get_Players()) {
-            this.graph.get_Player(player).switchType();
+            List<Player> alive_neighbors = new ArrayList<>();
+            for (Player neighbor : this.graph.get_Neighbors(player)) {
+                if (neighbor.isAlive()) {
+                    alive_neighbors.add(neighbor);
+                }
+            }
+        
+            if (!alive_neighbors.isEmpty()) {
+                Random random = new Random();
+                int randomIndex = random.nextInt(alive_neighbors.size());
+                Player randomPlayer = alive_neighbors.get(randomIndex);
+                this.graph.get_Player(player).switchType(randomPlayer.get_payoff());
+            }
+        }
+        
+        // Reset the payoff to 0
+        for (int player : this.graph.get_Players()) {
+            this.graph.get_Player(player).payoff= 0;
         }
 
-        for (int player : this.graph.get_Players()) { // Hosting game
+        // Hosting game
+        for (int player : this.graph.get_Players()) { 
+
+            if (!this.graph.get_Player(player).isAlive()) {
+                continue;
+            }
+
             int num_Cooperator = 0;
             int num_Defector = 0;
             for (Player neighbor: this.graph.get_Neighbors(player)){
@@ -24,35 +50,20 @@ public class Game {
             }
 
             for (Player neighbor: this.graph.get_Neighbors(player)){
-                
+                if(!neighbor.isAlive()){
+                    continue;
+                }
+                neighbor.calc_payoff(num_Cooperator,num_Defector);
             }
-
-
         }
 
-            
-            
 
-        //If the current game is not the first one
-            // for each player
-                // for each neighbor
-                    //get neighbors payoff and store it in a sturcture (vector?)
-                // player.switch()
-        
-        //for each player
-            // for each neighbor
-                // count num of cooperator
-                // count num of defector
-
-            // for each neighboer
-                //if defector
-                    // calculate payoff
-                //else
-                    // calculate payoff
-            // calculate payoff for the player
-        
-
-        //for each player 
-            // check death
+        // Check whether player is alive or not
+        for(int player : this.graph.get_Players()){
+            if (!this.graph.get_Player(player).isAlive()) {
+                continue;
+            }
+            this.graph.get_Player(player).eliminate_or_not(this.graph.get_Neighbors(player).length);
+        }
     }
 }

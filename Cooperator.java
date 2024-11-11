@@ -1,6 +1,6 @@
 class Cooperator extends Player {
 
-    public Cooperator(int energy, double alpha, double k, double enhancement) {
+    public Cooperator(double energy, double alpha, double k, double enhancement) {
         super(energy, alpha, k, enhancement); 
     }
 
@@ -16,7 +16,7 @@ class Cooperator extends Player {
         return true;
     }
 
-    public Player switchType() {
+    public Player switchType(double Payoff) {
         // Switch to Defector strategy
         return new Defector(this.payoff, this.alpha, this.k, this.enhancement);
     }
