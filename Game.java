@@ -5,8 +5,8 @@ import java.util.List;
 public class Game {
     private Graph graph;
 
-    public Game(int rows, int cols, int rounds) {
-        this.graph = new Graph(rows, cols);  
+    public Game(int size, String type, int rounds) {
+        this.graph = new Graph(size, type);  
     }
 
     public void runGame() {
