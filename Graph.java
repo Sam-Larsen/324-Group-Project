@@ -99,9 +99,9 @@ public class Graph {
 
                 // Add diagonal connections for hexagonal structure
                 int topRight = ((row - 1 + side) % side) * side + (col + 1) % side;
-                int bottomLeft = ((row + 1) % side) * side + (col - 1 + side) % side;
-
                 addEdge(node, topRight);
+
+                int bottomLeft = ((row + 1) % side) * side + (col - 1 + side) % side;
                 addEdge(node, bottomLeft);
             }
         }
@@ -110,7 +110,6 @@ public class Graph {
     // 2D lattice with each node connected to its 8 nearest neighbors (Moore neighborhood).
     private void generate2D8n() {
         int side = (int) Math.sqrt(size);
-
         for (int row = 0; row < side; row++) {
             for (int col = 0; col < side; col++) {
                 int node = row * side + col;
@@ -171,6 +170,14 @@ public class Graph {
         return adjacencyList.get(node);
     }
 
+    public void removeNode(int node) {
+        List<Integer> neighbors = adjacencyList.get(node);
+        for (int neighbor : neighbors) {
+            adjacencyList.get(neighbor).remove(Integer.valueOf(node));
+        }
+        neighbors.clear();
+    }
+
 
     // Rethink about the following get methods, now that the above structure only takes IDs into account. 
     // Players would need to be created, and Player's neighbors would need to be looked up by ID.
@@ -224,25 +231,38 @@ public class Graph {
         graph.setType("2D8n");
         System.out.println(graph);
 
+
+        System.out.println("1D2n Lattice:");
         // graph.setSize(12); // Be careful when setting size. New size may not be compatible with current lattice type.
         graph.setType("1D2n"); // Better to set type first then size
         graph.setSize(12);
-
-        System.out.println("1D2n Lattice:");
         System.out.println(graph);
         
         System.out.println("2D4n Lattice:");
-        // graph.setType("2D4n"); Be careful when setting type. New type may not be compatible with current lattice size.
+        // graph.setType("2D4n"); // Be careful when setting type. New type may not be compatible with current lattice size.
         graph.setSize(9); // Better to set size first then type
         graph.setType("2D4n"); 
+        int removedNode = 2;
+        System.out.println("Neighbors of node " + removedNode + " to be removed: " + graph.getNeighbors(2));
+        graph.removeNode(removedNode);
         System.out.println(graph);
 
         System.out.println("2D6n Lattice:");
         graph.setType("2D6n");
+        removedNode = 3;
+        System.out.println("Neighbors of node " + removedNode + " to be removed: " + graph.getNeighbors(2));
+        graph.removeNode(removedNode);
         System.out.println(graph);
 
         System.out.println("2D8n Lattice:");
         graph.setType("2D8n");
+        removedNode = 4;
+        System.out.println("Neighbors of node " + removedNode + " to be removed: " + graph.getNeighbors(2));
+        graph.removeNode(removedNode);
+        System.out.println(graph);
+        removedNode = 5;
+        System.out.println("Neighbors of node " + removedNode + " to be removed: " + graph.getNeighbors(2));
+        graph.removeNode(removedNode);
         System.out.println(graph);
     }
 }
