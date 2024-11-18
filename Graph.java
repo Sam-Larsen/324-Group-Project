@@ -2,49 +2,59 @@ import java.util.*;
 
 public class Graph {
     
-    private int size;
-    private Map<Integer, List<Integer>> adjacencyList;
+    private static final int SIZE_DEFAULT = 10000;
+    private static final String TYPE_DEFAULT = "2D4n";
+    private static final String TYPE_1D2n = "1D2n";
+    private static final String TYPE_2D4n = "2D4n";
+    private static final String TYPE_2D6n = "2D6n";
+    private static final String TYPE_2D8n = "2D8n";
     private static final int SIZE_MIN_1D = 3;
     private static final int SIZE_MIN_2D = 9;
 
+    private int size = SIZE_DEFAULT;
+    private String type = TYPE_DEFAULT;
+    private Map<Integer, List<Integer>> adjacencyList = new HashMap<>();
+    
+    public Graph() {
+        generateLattice();
+    }
+
     public Graph(int size, String type) {
         this.size = size;
-        adjacencyList = new HashMap<>();
+        this.type = type;
+        generateLattice();
+    }
+
+    private void generateLattice() {
+        adjacencyList.clear();
         for (int i = 0; i < size; i++) {
             adjacencyList.put(i, new ArrayList<>());
         }
-        generateLattice(type);
-    }
 
-    private void addEdge(int node1, int node2) {
-        adjacencyList.get(node1).add(node2);
-    }
-
-    public void generateLattice(String type) {
         switch(type) {
-            case "1D2n":
+            case TYPE_1D2n:
+                checkSizeCompatibility1D();
                 generate1D2n();
                 break;
-            case "2D4n":
+            case TYPE_2D4n:
+                checkSizeCompatibility2D();
                 generate2D4n();
                 break;
-            case "2D6n":
+            case TYPE_2D6n:
+                checkSizeCompatibility2D();
                 generate2D6n();
                 break;
-            case "2D8n":
+            case TYPE_2D8n:
+                checkSizeCompatibility2D();
                 generate2D8n();
                 break;
             default:
-                throw new IllegalArgumentException("Invalid lattice type. Use 1D2n, 2D4n, 2D6n, or 2D8n.");
+                throw new IllegalArgumentException("Invalid lattice type: " + type + ". Use " + TYPE_1D2n + ", " + TYPE_2D4n + ", " + TYPE_2D6n + ", or " + TYPE_2D8n + ".");
         }
     }
 
     // 1D lattice with each node connected to its 2 nearest neighbors.
     private void generate1D2n() {
-        if (size < SIZE_MIN_1D) {
-            throw new IllegalArgumentException("Size must be at least " + SIZE_MIN_1D + " for 1D lattices.");
-        } 
-
         for (int i = 0; i < size; i++) {
             addEdge(i, (i + 1) % size); // Connect to next node
             addEdge(i, (i - 1 + size) % size); // Connect to previous node (mod for periodic)
@@ -53,14 +63,7 @@ public class Graph {
 
     // 2D lattice with each node connected to its 4 nearest neighbors.
     private void generate2D4n() {
-        if (size < SIZE_MIN_2D) {
-            throw new IllegalArgumentException("Size must be at least " + SIZE_MIN_2D + " for 2D lattices.");
-        } 
         int side = (int) Math.sqrt(size);
-        if (side * side != size) {
-            throw new IllegalArgumentException("Size must be a perfect square for 2D lattices.");
-        }
-
         for (int row = 0; row < side; row++) {
             for (int col = 0; col < side; col++) {
                 int node = row * side + col;
@@ -87,10 +90,9 @@ public class Graph {
     // 2D lattice with each node connected to its 6 nearest neighbors (hexagonal structure approximation).
     private void generate2D6n() {
         // Connect to 4 nearest neighbors (same as 2D4n)
-        generate2D4n();
+        generate2D4n(); 
         
         int side = (int) Math.sqrt(size);
-
         for (int row = 0; row < side; row++) {
             for (int col = 0; col < side; col++) {
                 int node = row * side + col;
@@ -107,13 +109,7 @@ public class Graph {
 
     // 2D lattice with each node connected to its 8 nearest neighbors (Moore neighborhood).
     private void generate2D8n() {
-        if (size < SIZE_MIN_2D) {
-            throw new IllegalArgumentException("Size must be at least " + SIZE_MIN_2D + " for 2D lattices.");
-        }
         int side = (int) Math.sqrt(size);
-        if (side * side != size) {
-            throw new IllegalArgumentException("Size must be a perfect square for 2D lattices.");
-        }
 
         for (int row = 0; row < side; row++) {
             for (int col = 0; col < side; col++) {
@@ -133,8 +129,42 @@ public class Graph {
         }
     }
 
+    private void checkSizeCompatibility1D() {
+        if (size < SIZE_MIN_1D) {
+            throw new IllegalArgumentException("Size must be at least " + SIZE_MIN_1D + " for a " + type + " lattice.");
+        }
+    }
+
+    private void checkSizeCompatibility2D() {
+        if (size < SIZE_MIN_2D) {
+            throw new IllegalArgumentException("Size must be at least " + SIZE_MIN_2D + " for a " + type + " lattice.");
+        } 
+        int side = (int) Math.sqrt(size);
+        if (side * side != size) {
+            throw new IllegalArgumentException("Size must be a perfect square for a " + type + " lattice.");
+        }
+    }
+
+    private void addEdge(int node1, int node2) {
+        adjacencyList.get(node1).add(node2);
+    }
+
     public int getSize() {
         return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+        generateLattice();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+        generateLattice();
     }
 
     public List<Integer> getNeighbors(int node) {
@@ -162,7 +192,6 @@ public class Graph {
         return neighbors;
     }
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -173,23 +202,48 @@ public class Graph {
     }
 
     public static void main(String[] args) {
+        // System.out.println("Default Lattice:");
+        // Graph graphDefault = new Graph();
+        // System.out.println(graphDefault);
+
         int size = 16; // Example size for a 4x4 grid
 
         System.out.println("1D2n Lattice:");
-        Graph graph1 = new Graph(size, "1D2n");
-        System.out.println(graph1);
+        Graph graph = new Graph(size, "1D2n");
+        System.out.println(graph);
 
         System.out.println("2D4n Lattice:");
-        Graph graph2 = new Graph(size, "2D4n");
-        System.out.println(graph2);
+        graph.setType("2D4n");
+        System.out.println(graph);
 
         System.out.println("2D6n Lattice:");
-        Graph graph3 = new Graph(size, "2D6n");
-        System.out.println(graph3);
+        graph.setType("2D6n");
+        System.out.println(graph);
 
         System.out.println("2D8n Lattice:");
-        Graph graph4 = new Graph(size, "2D8n");
-        System.out.println(graph4);
+        graph.setType("2D8n");
+        System.out.println(graph);
+
+        // graph.setSize(12); // Be careful when setting size. New size may not be compatible with current lattice type.
+        graph.setType("1D2n"); // Better to set type first then size
+        graph.setSize(12);
+
+        System.out.println("1D2n Lattice:");
+        System.out.println(graph);
+        
+        System.out.println("2D4n Lattice:");
+        // graph.setType("2D4n"); Be careful when setting type. New type may not be compatible with current lattice size.
+        graph.setSize(9); // Better to set size first then type
+        graph.setType("2D4n"); 
+        System.out.println(graph);
+
+        System.out.println("2D6n Lattice:");
+        graph.setType("2D6n");
+        System.out.println(graph);
+
+        System.out.println("2D8n Lattice:");
+        graph.setType("2D8n");
+        System.out.println(graph);
     }
 }
 
