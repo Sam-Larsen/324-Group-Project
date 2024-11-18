@@ -171,7 +171,7 @@ public class Graph {
     }
 
     public void removeNode(int node) {
-        List<Integer> neighbors = adjacencyList.get(node);
+        List<Integer> neighbors = getNeighbors(node);
         for (int neighbor : neighbors) {
             adjacencyList.get(neighbor).remove(Integer.valueOf(node));
         }
