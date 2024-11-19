@@ -16,8 +16,10 @@ class Cooperator extends Player {
         return true;
     }
 
-    public Player switchType(double Payoff) {
-        // Switch to Defector strategy
-        return new Defector(this.payoff, this.alpha, this.k, this.enhancement);
+    public Player switchType(double neighborPayoff) {
+        if (neighborPayoff > this.payoff) {
+            return new Defector(this.payoff, this.alpha, this.k, this.enhancement);
+        }
+        return this;
     }
 }

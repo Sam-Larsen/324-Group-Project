@@ -23,7 +23,7 @@ public class Game {
                 Random random = new Random();
                 int randomIndex = random.nextInt(alive_neighbors.size());
                 Player randomPlayer = alive_neighbors.get(randomIndex);
-                this.graph.get_Player(player).switchType(randomPlayer.get_payoff());
+                this.graph.get_Player(player).switchType(randomPlayer.getPayoff());
             }
         }
         

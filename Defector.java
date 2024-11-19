@@ -16,7 +16,10 @@ class Defector extends Player {
     }
 
     @Override
-    public Player switchType(double Payoff) {
-        return new Cooperator(this.payoff, this.alpha, this.k, this.enhancement);  
+    public Player switchType(double neighborPayoff) {
+        if (neighborPayoff > this.payoff) {
+            return new Defector(this.payoff, this.alpha, this.k, this.enhancement);
+        }
+        return this;
     }
 }
