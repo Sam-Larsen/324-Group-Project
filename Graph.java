@@ -179,25 +179,6 @@ public class Graph {
     }
 
 
-    // Rethink about the following get methods, now that the above structure only takes IDs into account. 
-    // Players would need to be created, and Player's neighbors would need to be looked up by ID.
-
-    //get all the players vertex ID
-    public int[] get_Players(){
-        return null;
-    }
-
-    //get a specific player
-    public Player get_Player(int ID){
-        return null;
-    }
-
-    // get all the neighbors of a specific palyer
-    public Player[] get_Neighbors(int ID) {
-        Player[] neighbors = new Player[4];
-
-        return neighbors;
-    }
 
     @Override
     public String toString() {

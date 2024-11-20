@@ -7,12 +7,13 @@ abstract class Player {
     protected double enhancement;
     // other field of parameter *enahncement....
 
-    public Player(double energy, double alpha, double k, double enhancement) {
+    public Player(double energy, double alpha, double k, double enhancement, int id) {
         this.payoff = energy;
         this.alpha= alpha;
         this.k = k;
         this.enhancement=enhancement;
         this.alive = true;
+        this.id = id;
     }
 
     public int getId() {

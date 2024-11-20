@@ -1,7 +1,7 @@
 class Defector extends Player {
 
-    public Defector(double energy, double alpha, double k, double enhancement) {
-        super(energy, alpha, k, enhancement); 
+    public Defector(double energy, double alpha, double k, double enhancement, int id) {
+        super(energy, alpha, k, enhancement,id); 
     }
 
     @Override
@@ -18,7 +18,7 @@ class Defector extends Player {
     @Override
     public Player switchType(double neighborPayoff) {
         if (neighborPayoff > this.payoff) {
-            return new Defector(this.payoff, this.alpha, this.k, this.enhancement);
+            return new Defector(this.payoff, this.alpha, this.k, this.enhancement, this.id);
         }
         return this;
     }
