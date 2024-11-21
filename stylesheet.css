@@ -1,0 +1,15 @@
+graph {
+  fill-color: white;
+}
+
+node {
+  size: 10px, 10px;
+  shape: box;
+  fill-color: green;
+}
+
+node.defector {
+  size: 10px, 10px;
+  shape: box;
+  fill-color: blue;
+}
