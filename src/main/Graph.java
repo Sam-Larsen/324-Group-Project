@@ -175,6 +175,7 @@ public class Graph {
   }
 
   private void addEdge(int node1, int node2) {
+    adjacencyList.get(node1).add(node2);
     String edgeId = Integer.toString(node1) + ":" + Integer.toString(node2);
     String reverseEdgeId =
       Integer.toString(node2) + ":" + Integer.toString(node1);
@@ -183,8 +184,6 @@ public class Graph {
     Edge reverseEdge = visualGraph.getEdge(reverseEdgeId);
 
     if (edge != null || reverseEdge != null) return;
-
-    adjacencyList.get(node1).add(node2);
     visualGraph.addEdge(edgeId, node1, node2);
   }
 
