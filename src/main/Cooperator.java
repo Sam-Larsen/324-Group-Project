@@ -15,10 +15,8 @@ class Cooperator extends Player {
   @Override
   public void calcPayoff(int Cooperator, int Defector) {
     // Calculate payoff for Cooperator
-    int basePayoff = (int) (
-      this.enhancement * Cooperator / (Cooperator + Defector + 1)
-    );
-    this.payoff += basePayoff - 1;
+    double basePayoff = this.enhancement * Cooperator / (Cooperator + Defector + 1);
+    this.payoff += basePayoff - 1.0;
   }
 
   @Override
