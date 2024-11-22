@@ -15,7 +15,7 @@ public class Graph {
   private static final int SIZE_MIN_1D = 3;
   private static final int SIZE_MIN_2D = 9;
 
-  private org.graphstream.graph.Graph visualGraph;
+  public org.graphstream.graph.Graph visualGraph;
   private int size = SIZE_DEFAULT;
   private String type = TYPE_DEFAULT;
   private Map<Integer, List<Integer>> adjacencyList = new HashMap<>();
@@ -88,7 +88,7 @@ public class Graph {
       for (int col = 0; col < side; col++) {
         int node = row * side + col;
         // TODO: Check with Minh on how to display nodes
-        // visualGraph.getNode(node).setAttribute("xy", row, col);
+        visualGraph.getNode(node).setAttribute("xy", row, col);
 
         // Connect to right neighbor
         int right = row * side + (col + 1) % side;
@@ -118,6 +118,7 @@ public class Graph {
     for (int row = 0; row < side; row++) {
       for (int col = 0; col < side; col++) {
         int node = row * side + col;
+        visualGraph.getNode(node).setAttribute("xy", row, col);
 
         // Add diagonal connections for hexagonal structure
         int topRight = ((row - 1 + side) % side) * side + (col + 1) % side;
@@ -135,6 +136,7 @@ public class Graph {
     for (int row = 0; row < side; row++) {
       for (int col = 0; col < side; col++) {
         int node = row * side + col;
+        visualGraph.getNode(node).setAttribute("xy", row, col);
 
         // Connect all neighbors including diagonals
         for (int dr = -1; dr <= 1; dr++) {
