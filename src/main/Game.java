@@ -1,5 +1,6 @@
 package src.main;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,17 @@ public class Game {
     this.numNeighbors = numNeighbors;
     this.players = new HashMap<>();
     initializePlayer(size, defectors);
+  }
+  public Game() {
+    this.graph = new Graph(25, "2D4n");
+    this.rounds = 10;
+    this.alpha = 0.2;
+    this.k = 0.5;
+    this.enhancement = 1.5;
+    this.numNeighbors = 4;
+    this.players = new HashMap<>();
+    List<Integer> defector = Arrays.asList(12);
+    initializePlayer(25, defector);
   }
 
   public void initializePlayer(int size, List<Integer> defectors) {

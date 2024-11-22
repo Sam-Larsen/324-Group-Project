@@ -38,12 +38,12 @@ abstract class Player {
     return this.alive;
   }
 
-  public boolean eliminateOrNot(int num_alive_neighbor) {
+  public boolean eliminateOrNot(int numNeighbor) {
     if (
       this.payoff <
       this.alpha *
-      (1 - this.enhancement) *
-      (1 + num_alive_neighbor)
+      (this.enhancement-1) *
+      (1 + numNeighbor)
     ) {
       this.alive = false;
       return true;
