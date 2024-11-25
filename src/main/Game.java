@@ -105,6 +105,11 @@ public class Game {
                 this.players.get(playerIndex)
                   .switchType(this.players.get(bestNeighborIndex).getPayoff())
               );
+            if (this.players.get(playerIndex).isCooperator()){
+              graph.visualGraph.getNode(playerIndex).setAttribute("ui.class", "cooperator");
+            }else{
+              graph.visualGraph.getNode(playerIndex).setAttribute("ui.class", "defector");
+            }
           }
         }
       }
@@ -175,13 +180,13 @@ public class Game {
         this.graph.removeNode(playerIndex);
       }
     }
-    try {
-      // Sleep for 5 seconds
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-      // Handle the exception if the thread is interrupted
-      System.err.println("Sleep was interrupted: " + e.getMessage());
-    }
+     try {
+       // Sleep for 5 seconds
+       Thread.sleep(5000);
+     } catch (InterruptedException e) {
+       // Handle the exception if the thread is interrupted
+       System.err.println("Sleep was interrupted: " + e.getMessage());
+     }
   }
 
   public void runMultipleGames() {
@@ -207,6 +212,8 @@ public class Game {
         }
       }
     }
+    System.out.println("AliveCooperator "+ aliveCooperator);
+    System.out.println("AliveDefector "+ aliveDefector);
     return aliveCooperator + aliveDefector;
   }
 
@@ -216,7 +223,8 @@ public class Game {
     Integer countStability = 0;
     Integer round = 0;
 
-    while (countStability != 10) {
+    while (countStability < 5) {
+      System.out.println("Round: "+round);
       if (round == 0) {
         runOneGame(true);
         round++;
@@ -228,11 +236,14 @@ public class Game {
       Integer currentAlivePlayer = countAlivePlayer();
       if (alivePlayer == currentAlivePlayer) {
         countStability++;
+        System.out.println("countStability"+ countStability);
       } else {
         countStability = 0;
+        System.out.println("countStability"+ countStability);
         alivePlayer = currentAlivePlayer;
       }
     }
+    System.out.println("Ended");
   }
 
   public Graph getGraph() {
