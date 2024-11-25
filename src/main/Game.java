@@ -110,6 +110,13 @@ public class Game {
           num_Defector++;
         }
       }
+      
+      if (this.players.get(playerIndex).isCooperator()) {
+        num_Cooperator++;
+      } else {
+        num_Defector++;
+      }
+    
 
       for (Integer neighborIndex : this.graph.getNeighbors(playerIndex)) { //Neighbors will be alive
         this.players.get(neighborIndex)

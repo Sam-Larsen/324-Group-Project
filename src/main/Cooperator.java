@@ -34,7 +34,7 @@ class Cooperator extends Player {
         this.alpha,
         this.k,
         this.enhancement,
-        id
+        this.id
       );
     }
     return this;
