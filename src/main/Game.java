@@ -35,6 +35,7 @@ public class Game {
     this.players = new HashMap<>();
     initializePlayer(size, defectors);
   }
+
   public Game() {
     this.graph = new Graph(25, "2D4n");
     this.rounds = 10;
@@ -124,7 +125,7 @@ public class Game {
 
       if (this.players.get(playerIndex).eliminateOrNot(this.numNeighbors)) {
         this.graph.removeNode(playerIndex);
-      }
+      }    
     }
   }
 
@@ -133,4 +134,42 @@ public class Game {
       runOneGame();
     }
   }
+
+  public Integer countAlivePlayer(){
+    Integer aliveCooperator= 0;
+    Integer aliveDefector=0;
+    for (Map.Entry<Integer, Player> agent : players.entrySet()) {
+      Integer playerIndex = agent.getKey();
+      if (this.players.get(playerIndex).isAlive()) {
+        if(this.players.get(playerIndex).isCooperator()){
+          aliveCooperator++;
+        }
+        else{
+          aliveDefector++;
+        }
+
+      } 
+    }
+    return aliveCooperator+aliveDefector;
+
+  }
+
+  public void runAutoGames() {
+    // Check number of alive Cooperator and Defector
+    Integer alivePlayer = countAlivePlayer();
+    Integer countStability = 0;
+
+    while (countStability != 10){
+      runOneGame();
+      Integer currentAlivePlayer = countAlivePlayer();
+      if (alivePlayer==currentAlivePlayer){
+        countStability++;
+      }else{
+        countStability=0;
+        alivePlayer=currentAlivePlayer;
+      }
+    }
+  }
+
+
 }
