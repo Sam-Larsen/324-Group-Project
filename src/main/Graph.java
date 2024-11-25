@@ -185,6 +185,7 @@ public class Graph {
 
     if (edge != null || reverseEdge != null) return;
     visualGraph.addEdge(edgeId, node1, node2);
+    visualGraph.getEdge(edgeId).setAttribute("ui.class", "alive");
   }
 
   public int getSize() {

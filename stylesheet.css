@@ -3,13 +3,27 @@ graph {
 }
 
 node {
-  size: 10px, 10px;
+  size: 15px, 15px;
   shape: box;
   fill-color: green;
 }
 
 node.defector {
-  size: 10px, 10px;
-  shape: box;
+  fill-color: orange;
+}
+
+node.cooperator {
   fill-color: blue;
+}
+
+edge {
+  size: 3px;
+}
+
+edge.alive {
+  fill-color: black;
+}
+
+edge.dead {
+  fill-color: lightgray;
 }

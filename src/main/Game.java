@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.graphstream.graph.Edge;
 
 public class Game {
 
@@ -43,7 +44,7 @@ public class Game {
     this.enhancement = 1.5;
     this.numNeighbors = 4;
     this.players = new HashMap<>();
-    List<Integer> defector = Arrays.asList(14);
+    List<Integer> defector = Arrays.asList(12);
     initializePlayer(25, defector);
   }
 
@@ -51,8 +52,10 @@ public class Game {
     for (int index = 0; index < size; index++) {
       Player player;
       if (defectors.contains(index)) {
+        graph.visualGraph.getNode(index).setAttribute("ui.class", "defector");
         player = new Defector(0, this.alpha, this.k, this.enhancement, index);
       } else {
+        graph.visualGraph.getNode(index).setAttribute("ui.class", "cooperator");
         player = new Cooperator(0, this.alpha, this.k, this.enhancement, index);
       }
 
@@ -63,7 +66,7 @@ public class Game {
 
   public void runOneGame(boolean firstGame) {
     // Check for the player's switch strategy
-    if (!firstGame){
+    if (!firstGame) {
       for (Map.Entry<Integer, Player> agent : players.entrySet()) {
         Integer playerIndex = agent.getKey();
 
@@ -92,10 +95,16 @@ public class Game {
             }
           }
           // Switch if type are different
-          if (this.players.get(playerIndex).isCooperator() != this.players.get(bestNeighborIndex).isCooperator()) {
+          if (
+            this.players.get(playerIndex).isCooperator() !=
+            this.players.get(bestNeighborIndex).isCooperator()
+          ) {
             // Switch type using the random player's payoff
-            this.players.put(playerIndex, this.players.get(playerIndex)
-            .switchType(this.players.get(bestNeighborIndex).getPayoff()));
+            this.players.put(
+                playerIndex,
+                this.players.get(playerIndex)
+                  .switchType(this.players.get(bestNeighborIndex).getPayoff())
+              );
           }
         }
       }
@@ -105,8 +114,6 @@ public class Game {
         this.players.get(playerIndex).payoff = 0;
       }
     }
-
-    
 
     // Hosting game
     for (Map.Entry<Integer, Player> agent : players.entrySet()) {
@@ -126,13 +133,12 @@ public class Game {
           num_Defector++;
         }
       }
-      
+
       if (this.players.get(playerIndex).isCooperator()) {
         num_Cooperator++;
       } else {
         num_Defector++;
       }
-    
 
       for (Integer neighborIndex : this.graph.getNeighbors(playerIndex)) { //Neighbors will be alive
         this.players.get(neighborIndex)
@@ -151,64 +157,85 @@ public class Game {
       }
 
       if (this.players.get(playerIndex).eliminateOrNot(this.numNeighbors)) {
+        // Disable edges of dying agent on visual graph
+        for (Integer neighborIndex : this.graph.getNeighbors(playerIndex)) {
+          String edgeId =
+            Integer.toString(playerIndex) +
+            ":" +
+            Integer.toString(neighborIndex);
+          String reverseEdgeId =
+            Integer.toString(neighborIndex) +
+            ":" +
+            Integer.toString(playerIndex);
+          Edge edge = graph.visualGraph.getEdge(edgeId) != null
+            ? graph.visualGraph.getEdge(edgeId)
+            : graph.visualGraph.getEdge(reverseEdgeId);
+          edge.setAttribute("ui.class", "dead");
+        }
         this.graph.removeNode(playerIndex);
-      }    
+      }
+    }
+    try {
+      // Sleep for 5 seconds
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // Handle the exception if the thread is interrupted
+      System.err.println("Sleep was interrupted: " + e.getMessage());
     }
   }
 
   public void runMultipleGames() {
     for (int i = 0; i < this.rounds; i++) {
-      if(i==0){
+      if (i == 0) {
         runOneGame(true);
-      }else{
+      } else {
         runOneGame(false);
       }
     }
   }
 
-  public Integer countAlivePlayer(){
-    Integer aliveCooperator= 0;
-    Integer aliveDefector=0;
+  public Integer countAlivePlayer() {
+    Integer aliveCooperator = 0;
+    Integer aliveDefector = 0;
     for (Map.Entry<Integer, Player> agent : players.entrySet()) {
       Integer playerIndex = agent.getKey();
       if (this.players.get(playerIndex).isAlive()) {
-        if(this.players.get(playerIndex).isCooperator()){
+        if (this.players.get(playerIndex).isCooperator()) {
           aliveCooperator++;
-        }
-        else{
+        } else {
           aliveDefector++;
         }
-
-      } 
+      }
     }
-    return aliveCooperator+aliveDefector;
-
+    return aliveCooperator + aliveDefector;
   }
 
   public void runAutoGames() {
     // Check number of alive Cooperator and Defector
     Integer alivePlayer = countAlivePlayer();
     Integer countStability = 0;
-    Integer round =0;
+    Integer round = 0;
 
-    while (countStability != 10){
-      if (round == 0){
+    while (countStability != 10) {
+      if (round == 0) {
         runOneGame(true);
         round++;
-      }else{
+      } else {
         runOneGame(false);
         round++;
       }
-      
+
       Integer currentAlivePlayer = countAlivePlayer();
-      if (alivePlayer==currentAlivePlayer){
+      if (alivePlayer == currentAlivePlayer) {
         countStability++;
-      }else{
-        countStability=0;
-        alivePlayer=currentAlivePlayer;
+      } else {
+        countStability = 0;
+        alivePlayer = currentAlivePlayer;
       }
     }
   }
 
-
+  public Graph getGraph() {
+    return graph;
+  }
 }
