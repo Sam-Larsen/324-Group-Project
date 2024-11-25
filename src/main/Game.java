@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class Game {
 
@@ -38,13 +37,13 @@ public class Game {
 
   public Game() {
     this.graph = new Graph(25, "2D4n");
-    this.rounds = 10;
-    this.alpha = 0.2;
+    this.rounds = 3;
+    this.alpha = 0.25;
     this.k = 0.5;
     this.enhancement = 1.5;
     this.numNeighbors = 4;
     this.players = new HashMap<>();
-    List<Integer> defector = Arrays.asList(12);
+    List<Integer> defector = Arrays.asList(14);
     initializePlayer(25, defector);
   }
 
@@ -62,35 +61,52 @@ public class Game {
     }
   }
 
-  public void runOneGame() {
+  public void runOneGame(boolean firstGame) {
     // Check for the player's switch strategy
-    for (Map.Entry<Integer, Player> agent : players.entrySet()) {
-      Integer playerIndex = agent.getKey();
-      //Check whether they are alive
-      if (!this.players.get(playerIndex).isAlive()) {
-        continue;
-      }
+    if (!firstGame){
+      for (Map.Entry<Integer, Player> agent : players.entrySet()) {
+        Integer playerIndex = agent.getKey();
 
-      // If alive find their neighbor (since we removed node all neighbors are alive)
-      List<Integer> aliveNeighbors = this.graph.getNeighbors(playerIndex);
-      if (!aliveNeighbors.isEmpty()) {
-        Random random = new Random();
-        int randomIndex = random.nextInt(aliveNeighbors.size());
-        Integer randomPlayerIndex = aliveNeighbors.get(randomIndex);
-        // Switch if type are different
-        if (this.players.get(playerIndex).isCooperator() != this.players.get(randomPlayerIndex).isCooperator()) {
-          // Switch type using the random player's payoff
-          this.players.get(playerIndex)
-          .switchType(this.players.get(randomPlayerIndex).getPayoff());
+        //Check whether they are alive
+        if (!this.players.get(playerIndex).isAlive()) {
+          continue;
+        }
+
+        // If alive find their neighbor (since we removed node all neighbors are alive)
+        List<Integer> aliveNeighbors = this.graph.getNeighbors(playerIndex);
+        if (!aliveNeighbors.isEmpty()) {
+          // // Select Random Player
+          // Random random = new Random();
+          // int randomIndex = random.nextInt(aliveNeighbors.size());
+          // Integer randomPlayerIndex = aliveNeighbors.get(randomIndex);
+          //System.out.println("select neighbor: "+randomPlayerIndex);
+
+          // Select High Payoff Player
+          Integer bestNeighborIndex = null;
+          double highestPayoff = Double.NEGATIVE_INFINITY;
+          for (Integer neighborIndex : aliveNeighbors) {
+            double neighborPayoff = this.players.get(neighborIndex).getPayoff();
+            if (neighborPayoff > highestPayoff) {
+              highestPayoff = neighborPayoff;
+              bestNeighborIndex = neighborIndex;
+            }
+          }
+          // Switch if type are different
+          if (this.players.get(playerIndex).isCooperator() != this.players.get(bestNeighborIndex).isCooperator()) {
+            // Switch type using the random player's payoff
+            this.players.put(playerIndex, this.players.get(playerIndex)
+            .switchType(this.players.get(bestNeighborIndex).getPayoff()));
+          }
         }
       }
+      // Reset the payoff to 0
+      for (Map.Entry<Integer, Player> agent : players.entrySet()) {
+        Integer playerIndex = agent.getKey();
+        this.players.get(playerIndex).payoff = 0;
+      }
     }
 
-    // Reset the payoff to 0
-    for (Map.Entry<Integer, Player> agent : players.entrySet()) {
-      Integer playerIndex = agent.getKey();
-      this.players.get(playerIndex).payoff = 0;
-    }
+    
 
     // Hosting game
     for (Map.Entry<Integer, Player> agent : players.entrySet()) {
@@ -142,7 +158,11 @@ public class Game {
 
   public void runMultipleGames() {
     for (int i = 0; i < this.rounds; i++) {
-      runOneGame();
+      if(i==0){
+        runOneGame(true);
+      }else{
+        runOneGame(false);
+      }
     }
   }
 
@@ -169,9 +189,17 @@ public class Game {
     // Check number of alive Cooperator and Defector
     Integer alivePlayer = countAlivePlayer();
     Integer countStability = 0;
+    Integer round =0;
 
     while (countStability != 10){
-      runOneGame();
+      if (round == 0){
+        runOneGame(true);
+        round++;
+      }else{
+        runOneGame(false);
+        round++;
+      }
+      
       Integer currentAlivePlayer = countAlivePlayer();
       if (alivePlayer==currentAlivePlayer){
         countStability++;

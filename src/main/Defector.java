@@ -15,7 +15,7 @@ class Defector extends Player {
   @Override
   public void calcPayoff(int Cooperator, int Defector) { // need to do it accumulatively
     // Defectors benefit from cooperators but do not incur a cost
-    this.payoff += this.enhancement * Cooperator / (Cooperator + Defector + 1);
+    this.payoff += this.enhancement * Cooperator / (Cooperator + Defector);
   }
 
   @Override
