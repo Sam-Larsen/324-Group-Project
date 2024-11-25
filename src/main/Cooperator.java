@@ -25,7 +25,10 @@ class Cooperator extends Player {
   }
 
   public Player switchType(double neighborPayoff) {
-    if (neighborPayoff > this.payoff) {
+    double random= Math.random();
+    double prob = 1 / (1 + Math.exp(-(neighborPayoff-this.payoff) / this.k));
+
+    if(random<prob){
       return new Defector(
         this.payoff,
         this.alpha,

@@ -77,8 +77,12 @@ public class Game {
         Random random = new Random();
         int randomIndex = random.nextInt(aliveNeighbors.size());
         Integer randomPlayerIndex = aliveNeighbors.get(randomIndex);
-        this.players.get(playerIndex)
+        // Switch if type are different
+        if (this.players.get(playerIndex).isCooperator() != this.players.get(randomPlayerIndex).isCooperator()) {
+          // Switch type using the random player's payoff
+          this.players.get(playerIndex)
           .switchType(this.players.get(randomPlayerIndex).getPayoff());
+        }
       }
     }
 

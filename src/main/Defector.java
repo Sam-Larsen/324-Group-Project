@@ -25,14 +25,18 @@ class Defector extends Player {
 
   @Override
   public Player switchType(double neighborPayoff) {
-    if (neighborPayoff > this.payoff) {
-      return new Defector(
+    double random= Math.random();
+    double prob = 1 / (1 + Math.exp(-(neighborPayoff-this.payoff) / this.k));
+
+    if(random<prob){
+      return new Cooperator(
         this.payoff,
         this.alpha,
         this.k,
         this.enhancement,
         this.id
       );
+
     }
     return this;
   }
