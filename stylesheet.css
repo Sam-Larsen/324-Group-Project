@@ -15,6 +15,9 @@ node.defector {
 node.cooperator {
   fill-color: blue;
 }
+node.dead{
+  visibility-mode: hidden;
+}
 
 edge {
   size: 3px;
@@ -25,5 +28,5 @@ edge.alive {
 }
 
 edge.dead {
-  fill-color: lightgray;
+  visibility-mode: hidden;
 }

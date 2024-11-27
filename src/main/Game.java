@@ -37,7 +37,7 @@ public class Game {
   }
 
   public Game() {
-    this.graph = new Graph(25, "2D4n");
+    this.graph = new Graph(36, "2D4n");
     this.rounds = 3;
     this.alpha = 0.25;
     this.k = 0.5;
@@ -45,7 +45,7 @@ public class Game {
     this.numNeighbors = 4;
     this.players = new HashMap<>();
     List<Integer> defector = Arrays.asList(12);
-    initializePlayer(25, defector);
+    initializePlayer(36, defector);
   }
 
   public void initializePlayer(int size, List<Integer> defectors) {
@@ -163,6 +163,7 @@ public class Game {
 
       if (this.players.get(playerIndex).eliminateOrNot(this.numNeighbors)) {
         // Disable edges of dying agent on visual graph
+        graph.visualGraph.getNode(playerIndex).setAttribute("ui.class", "dead");
         for (Integer neighborIndex : this.graph.getNeighbors(playerIndex)) {
           String edgeId =
             Integer.toString(playerIndex) +
@@ -212,8 +213,8 @@ public class Game {
         }
       }
     }
-    System.out.println("AliveCooperator "+ aliveCooperator);
-    System.out.println("AliveDefector "+ aliveDefector);
+    // System.out.println("AliveCooperator "+ aliveCooperator);
+    // System.out.println("AliveDefector "+ aliveDefector);
     return aliveCooperator + aliveDefector;
   }
 
@@ -224,7 +225,7 @@ public class Game {
     Integer round = 0;
 
     while (countStability < 5) {
-      System.out.println("Round: "+round);
+      // System.out.println("Round: "+round);
       if (round == 0) {
         runOneGame(true);
         round++;
@@ -243,7 +244,7 @@ public class Game {
         alivePlayer = currentAlivePlayer;
       }
     }
-    System.out.println("Ended");
+    // System.out.println("Ended");
   }
 
   public Graph getGraph() {
