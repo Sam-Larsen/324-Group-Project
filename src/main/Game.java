@@ -1,5 +1,8 @@
 package src.main;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,8 @@ public class Game {
   private double enhancement;
   private Map<Integer, Player> players;
   private Integer numNeighbors;
+  private Integer size;
+  private String filename;
 
   public Game(
     int size,
@@ -24,7 +29,8 @@ public class Game {
     double alpha,
     double k,
     double enhancement,
-    List<Integer> defectors
+    List<Integer> defectors,
+    String filename
   ) {
     this.graph = new Graph(size, type);
     this.rounds = rounds;
@@ -33,11 +39,15 @@ public class Game {
     this.enhancement = enhancement;
     this.numNeighbors = numNeighbors;
     this.players = new HashMap<>();
+    this.size = size;
+    this.filename = filename;
     initializePlayer(size, defectors);
   }
 
   public Game() {
-    this.graph = new Graph(36, "2D4n");
+    this.size = 36;
+    this.filename = null;
+    this.graph = new Graph(size, "2D4n");
     this.rounds = 3;
     this.alpha = 0.25;
     this.k = 0.5;
@@ -45,7 +55,7 @@ public class Game {
     this.numNeighbors = 4;
     this.players = new HashMap<>();
     List<Integer> defector = Arrays.asList(12);
-    initializePlayer(36, defector);
+    initializePlayer(size, defector);
   }
 
   public void initializePlayer(int size, List<Integer> defectors) {
@@ -200,32 +210,27 @@ public class Game {
     }
   }
 
-  public Integer countAlivePlayer() {
-    Integer aliveCooperator = 0;
-    Integer aliveDefector = 0;
-    for (Map.Entry<Integer, Player> agent : players.entrySet()) {
-      Integer playerIndex = agent.getKey();
-      if (this.players.get(playerIndex).isAlive()) {
-        if (this.players.get(playerIndex).isCooperator()) {
-          aliveCooperator++;
-        } else {
-          aliveDefector++;
-        }
-      }
+  private void writeToFile(String filename, String content) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+        writer.write(content);
+        writer.newLine();
+    } catch (IOException e) {
+        System.err.println("Error writing to file: " + e.getMessage());
     }
-    // System.out.println("AliveCooperator "+ aliveCooperator);
-    // System.out.println("AliveDefector "+ aliveDefector);
-    return aliveCooperator + aliveDefector;
   }
 
   public void runAutoGames() {
     // Check number of alive Cooperator and Defector
-    Integer alivePlayer = countAlivePlayer();
+    Integer alivePlayer = this.size;
     Integer countStability = 0;
     Integer round = 0;
 
-    while (countStability < 5) {
-      // System.out.println("Round: "+round);
+    if (this.filename != null) {
+      writeToFile(filename, "Round,AliveCooperator,AliveDefector,k,alpha,enhancement");
+    }
+
+    while (countStability < 15) {
+      System.out.println("Round: "+round);
       if (round == 0) {
         runOneGame(true);
         round++;
@@ -234,17 +239,42 @@ public class Game {
         round++;
       }
 
-      Integer currentAlivePlayer = countAlivePlayer();
+      // Count player
+      Integer aliveCooperator = 0;
+      Integer aliveDefector = 0;
+      for (Map.Entry<Integer, Player> agent : players.entrySet()) {
+        Integer playerIndex = agent.getKey();
+        if (this.players.get(playerIndex).isAlive()) {
+          if (this.players.get(playerIndex).isCooperator()) {
+            aliveCooperator++;
+          } else {
+            aliveDefector++;
+          }
+        }
+      }
+      
+      Integer currentAlivePlayer = aliveCooperator+aliveDefector;
+
+      // Record the data
+      if (this.filename != null){
+        String data = String.format(
+          "%d,%d,%d,%.2f,%.2f,%.2f",
+          round, aliveCooperator, aliveDefector, k, alpha, enhancement
+          );
+        writeToFile(this.filename, data);
+      }
+      
+
       if (alivePlayer == currentAlivePlayer) {
         countStability++;
-        System.out.println("countStability"+ countStability);
+        // System.out.println("countStability " + countStability);
       } else {
         countStability = 0;
-        System.out.println("countStability"+ countStability);
+        // System.out.println("countStability " + countStability);
         alivePlayer = currentAlivePlayer;
       }
     }
-    // System.out.println("Ended");
+    System.out.println("Ended");
   }
 
   public Graph getGraph() {
