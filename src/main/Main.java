@@ -11,7 +11,7 @@ public class Main {
     String folder = "/Users/zhaochong/Desktop/CSC324/324-Group-Project/";
     String lattice = "2D4n";
     Integer numNeighbors = 4; // it is the number of neighbors (the number before n)
-    Integer size = 25;
+    Integer size = 1024;
 
 
     double[] kValues = {0.1,0.5,1.0,2.0};
