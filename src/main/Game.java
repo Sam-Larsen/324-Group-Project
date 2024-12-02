@@ -115,10 +115,14 @@ public class Game {
                 this.players.get(playerIndex)
                   .switchType(this.players.get(bestNeighborIndex).getPayoff())
               );
-            if (this.players.get(playerIndex).isCooperator()){
-              graph.visualGraph.getNode(playerIndex).setAttribute("ui.class", "cooperator");
-            }else{
-              graph.visualGraph.getNode(playerIndex).setAttribute("ui.class", "defector");
+            if (this.players.get(playerIndex).isCooperator()) {
+              graph.visualGraph
+                .getNode(playerIndex)
+                .setAttribute("ui.class", "cooperator");
+            } else {
+              graph.visualGraph
+                .getNode(playerIndex)
+                .setAttribute("ui.class", "defector");
             }
           }
         }
@@ -191,13 +195,11 @@ public class Game {
         this.graph.removeNode(playerIndex);
       }
     }
-     try {
-       // Sleep for 5 seconds
-       Thread.sleep(5000);
-     } catch (InterruptedException e) {
-       // Handle the exception if the thread is interrupted
-       System.err.println("Sleep was interrupted: " + e.getMessage());
-     }
+    /* try {
+      Thread.sleep(3000);
+    } catch (InterruptedException e) {
+      System.err.println("Sleep was interrupted: " + e.getMessage());
+    } */
   }
 
   public void runMultipleGames() {
@@ -211,26 +213,31 @@ public class Game {
   }
 
   private void writeToFile(String filename, String content) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-        writer.write(content);
-        writer.newLine();
+    try (
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))
+    ) {
+      writer.write(content);
+      writer.newLine();
     } catch (IOException e) {
-        System.err.println("Error writing to file: " + e.getMessage());
+      System.err.println("Error writing to file: " + e.getMessage());
     }
   }
 
   public void runAutoGames() {
     // Check number of alive Cooperator and Defector
-    Integer alivePlayer = this.size;
+    int alivePlayer = this.size;
     Integer countStability = 0;
     Integer round = 0;
 
     if (this.filename != null) {
-      writeToFile(filename, "Round,AliveCooperator,AliveDefector,k,alpha,enhancement");
+      writeToFile(
+        filename,
+        "Round,AliveCooperator,AliveDefector,k,alpha,enhancement"
+      );
     }
 
     while (countStability < 15) {
-      System.out.println("Round: "+round);
+      System.out.println("Round: " + round);
       if (round == 0) {
         runOneGame(true);
         round++;
@@ -252,18 +259,22 @@ public class Game {
           }
         }
       }
-      
-      Integer currentAlivePlayer = aliveCooperator+aliveDefector;
+
+      int currentAlivePlayer = aliveCooperator + aliveDefector;
 
       // Record the data
-      if (this.filename != null){
+      if (this.filename != null) {
         String data = String.format(
           "%d,%d,%d,%.2f,%.2f,%.2f",
-          round, aliveCooperator, aliveDefector, k, alpha, enhancement
-          );
+          round,
+          aliveCooperator,
+          aliveDefector,
+          k,
+          alpha,
+          enhancement
+        );
         writeToFile(this.filename, data);
       }
-      
 
       if (alivePlayer == currentAlivePlayer) {
         countStability++;
