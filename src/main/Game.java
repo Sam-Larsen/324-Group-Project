@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import org.graphstream.graph.Edge;
 
 public class Game {
@@ -88,32 +89,32 @@ public class Game {
         // If alive find their neighbor (since we removed node all neighbors are alive)
         List<Integer> aliveNeighbors = this.graph.getNeighbors(playerIndex);
         if (!aliveNeighbors.isEmpty()) {
-          // // Select Random Player
-          // Random random = new Random();
-          // int randomIndex = random.nextInt(aliveNeighbors.size());
-          // Integer randomPlayerIndex = aliveNeighbors.get(randomIndex);
+          // Select Random Player
+          Random random = new Random();
+          int randomIndex = random.nextInt(aliveNeighbors.size());
+          Integer randomPlayerIndex = aliveNeighbors.get(randomIndex);
           //System.out.println("select neighbor: "+randomPlayerIndex);
 
           // Select High Payoff Player
-          Integer bestNeighborIndex = null;
-          double highestPayoff = Double.NEGATIVE_INFINITY;
-          for (Integer neighborIndex : aliveNeighbors) {
-            double neighborPayoff = this.players.get(neighborIndex).getPayoff();
-            if (neighborPayoff > highestPayoff) {
-              highestPayoff = neighborPayoff;
-              bestNeighborIndex = neighborIndex;
-            }
-          }
+          // Integer bestNeighborIndex = null;
+          // double highestPayoff = Double.NEGATIVE_INFINITY;
+          // for (Integer neighborIndex : aliveNeighbors) {
+          //   double neighborPayoff = this.players.get(neighborIndex).getPayoff();
+          //   if (neighborPayoff > highestPayoff) {
+          //     highestPayoff = neighborPayoff;
+          //     bestNeighborIndex = neighborIndex;
+          //   }
+          // }
           // Switch if type are different
           if (
             this.players.get(playerIndex).isCooperator() !=
-            this.players.get(bestNeighborIndex).isCooperator()
+            this.players.get(randomPlayerIndex).isCooperator()
           ) {
             // Switch type using the random player's payoff
             this.players.put(
                 playerIndex,
                 this.players.get(playerIndex)
-                  .switchType(this.players.get(bestNeighborIndex).getPayoff())
+                  .switchType(this.players.get(randomPlayerIndex).getPayoff())
               );
             if (this.players.get(playerIndex).isCooperator()) {
               graph.visualGraph
@@ -138,6 +139,7 @@ public class Game {
     for (Map.Entry<Integer, Player> agent : players.entrySet()) {
       Integer playerIndex = agent.getKey();
 
+
       if (!this.players.get(playerIndex).isAlive()) {
         continue;
       }
@@ -158,7 +160,6 @@ public class Game {
       } else {
         num_Defector++;
       }
-
       for (Integer neighborIndex : this.graph.getNeighbors(playerIndex)) { //Neighbors will be alive
         this.players.get(neighborIndex)
           .calcPayoff(num_Cooperator, num_Defector);
@@ -237,7 +238,6 @@ public class Game {
     }
 
     while (countStability < 15) {
-      System.out.println("Round: " + round);
       if (round == 0) {
         runOneGame(true);
         round++;
@@ -285,7 +285,6 @@ public class Game {
         alivePlayer = currentAlivePlayer;
       }
     }
-    System.out.println("Ended");
   }
 
   public Graph getGraph() {
